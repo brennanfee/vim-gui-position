@@ -1,6 +1,6 @@
 " gui-position.vim - Plugin to remember/restore the GUI window size and position
 " Maintainer:   Brennan Fee
-" Version:      1.0
+" Version:      2.0
 " Inspired by:  http://vim.wikia.com/wiki/Restore_screen_size_and_position
 
 if exists('g:loaded_gui_position') || &compatible || v:version < 700
@@ -10,10 +10,10 @@ else
 endif
 
 if has("gui_running") && has("autocmd")
-  function! ScreenFilename()
+  function! DefaultScreenFilename()
     if has('amiga')
       return "s:.vimsize"
-    elseif has('win32')
+    elseif has('gui_win32') || has('gui_win64')
       return $HOME.'\_vimsize'
     else
       return $HOME.'/.vimsize'
@@ -24,7 +24,7 @@ if has("gui_running") && has("autocmd")
     " Restore window size (columns and lines) and position
     " from values stored in vimsize file.
     " Must set font first so columns and lines are based on font size.
-    let f = ScreenFilename()
+    let f = g:gui_position_file_name
     if has("gui_running") && g:screen_size_restore_pos && filereadable(f)
       let vim_instance = (g:screen_size_by_vim_instance==1?(v:servername):'GVIM')
       for line in readfile(f)
@@ -45,7 +45,7 @@ if has("gui_running") && has("autocmd")
       let data = vim_instance . ' ' . &columns . ' ' . &lines . ' ' .
             \ (getwinposx()<0?0:getwinposx()) . ' ' .
             \ (getwinposy()<0?0:getwinposy())
-      let f = ScreenFilename()
+      let f = g:gui_position_file_name
       if filereadable(f)
         let lines = readfile(f)
         call filter(lines, "v:val !~ '^" . vim_instance . "\\>'")
@@ -60,9 +60,18 @@ if has("gui_running") && has("autocmd")
   if !exists('g:screen_size_restore_pos')
     let g:screen_size_restore_pos = 1
   endif
+
   if !exists('g:screen_size_by_vim_instance')
     let g:screen_size_by_vim_instance = 1
   endif
-  autocmd VimEnter * if g:screen_size_restore_pos == 1 | call ScreenRestore() | endif
-  autocmd VimLeavePre * if g:screen_size_restore_pos == 1 | call ScreenSave() | endif
+
+  if !exists('g:gui_position_file_name')
+      let g:gui_position_file_name = DefaultScreenFilename()
+  endif
+
+  augroup VimGuiPosition
+      autocmd!
+      autocmd VimEnter * if g:screen_size_restore_pos == 1 | call ScreenRestore() | endif
+      autocmd VimLeavePre * if g:screen_size_restore_pos == 1 | call ScreenSave() | endif
+  augroup END
 endif
