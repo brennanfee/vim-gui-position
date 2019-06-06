@@ -12,7 +12,7 @@ There are three configuration items.
 
 `g:screen_size_by_vim_instance` can be set to 0 to share the same size/position for all Vim Gui applications, the default is 1 (on) which means that sizes will be stored by application (Gvim will have different size\position than MacVim, should you use both).
 
-`g:gui_position_file_name` can be set to a path and filename to override the file used to remember the settings.  By default it places a file `.vimsize` in your home path (for Mac and Unixes), and uses `_vimsize` in the home path for Windows.
+`g:gui_position_file_name` can be set to a path and filename to override the file used to remember the settings.  By default it places the file `vimsize` in the .vim folder within your home path for all OSes.
 
 ## Installation
 
@@ -44,6 +44,10 @@ Using a plugin manager.
 
 - Manual
     - Copy all of the files into your `~/.vim` directory
+
+## License
+
+[MIT](license) © 2019 [Brennan Fee](https://github.com/brennanfee)
 
 [neobundle]: https://github.com/Shougo/neobundle.vim
 [vundle]: https://github.com/gmarik/vundle
