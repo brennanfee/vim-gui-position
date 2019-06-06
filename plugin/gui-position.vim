@@ -14,9 +14,9 @@ if has("gui_running") && has("autocmd")
     if has('amiga')
       return "s:.vimsize"
     elseif has('gui_win32') || has('gui_win64')
-      return $HOME.'\_vimsize'
+      return $HOME.'\.vim\vimsize'
     else
-      return $HOME.'/.vimsize'
+      return $HOME.'/.vim/vimsize'
     endif
   endfunction
 
